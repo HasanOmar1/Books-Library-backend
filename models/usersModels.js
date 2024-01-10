@@ -1,0 +1,24 @@
+import mongoose from "mongoose";
+
+const usersSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: [true, "Please provide a name"],
+    minlength: [3, "Your name must be at least 3 characters long"],
+  },
+  email: {
+    type: String,
+    required: [true, "Please provide an email"],
+    unique: true,
+    lowerCase: true,
+  },
+  password: {
+    type: String,
+    required: [true, "Please provide a password"],
+    minlength: [2, "Password length must be at least 2 characters long"],
+  },
+});
+
+const User = mongoose.model("Users", usersSchema);
+
+export default User;
