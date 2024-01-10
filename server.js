@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
-import errorHandler from "./middlewares/errorMiddleware.js";
+import { errorHandler } from "./middlewares/errorMiddleware.js";
 import usersRoute from "./routes/usersRoute.js";
 
 dotenv.config();
@@ -14,6 +14,7 @@ app.use(express.json());
 app.use("/api/v1/users", usersRoute);
 
 app.use(errorHandler);
+
 const port = process.env.PORT || 9999;
 
 mongoose.connect(process.env.MONGO_URI).then(() => {

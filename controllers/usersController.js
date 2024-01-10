@@ -62,7 +62,7 @@ export const login = async (req, res, next) => {
     const user = await User.findOne({ email });
     if (user && (await bcrypt.compare(password, user.password))) {
       res.send({
-        _id: user._id,
+        _id: user.id,
         name: user.name,
         email: user.email,
         token: generateToken(user._id),
@@ -72,7 +72,7 @@ export const login = async (req, res, next) => {
       throw new Error("Invalid Credentials");
     }
   } catch (error) {
-    next();
+    next(error);
   }
 };
 
@@ -84,7 +84,7 @@ export const getUsers = async (req, res, next) => {
     const users = await User.find({});
     res.send(users);
   } catch (error) {
-    next();
+    next(error);
   }
 };
 
@@ -101,6 +101,6 @@ export const deleteUser = async (req, res, next) => {
     }
     res.send(user);
   } catch (error) {
-    next();
+    next(error);
   }
 };
