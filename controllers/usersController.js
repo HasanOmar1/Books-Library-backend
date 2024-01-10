@@ -1,8 +1,9 @@
 import STATUS_CODE from "../constants/statusCode.js";
-import User from "../models/usersModels.js";
+import User from "../models/usersModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
+// generates token
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "30d" });
 };
@@ -77,7 +78,7 @@ export const login = async (req, res, next) => {
 
 //  Gets all users
 //  Get /api/v1/users
-//  Private
+//  Public
 export const getUsers = async (req, res, next) => {
   try {
     const users = await User.find({});
