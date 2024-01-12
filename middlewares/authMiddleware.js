@@ -15,7 +15,9 @@ export const protect = asyncHandler(async (req, res, next) => {
       next();
     } catch (error) {
       console.log("Token verification error: ", error);
-      res.status(STATUS_CODE.FORBIDDEN).send("Not authorized");
+      res
+        .status(STATUS_CODE.FORBIDDEN)
+        .send("You have to be logged in to do this action");
     }
   }
 
