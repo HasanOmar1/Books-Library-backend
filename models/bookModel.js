@@ -1,9 +1,21 @@
-// import mongoose from "mongoose";
+import mongoose from "mongoose";
 
-// const booksSchema = new mongoose.Schema({
+const booksSchema = new mongoose.Schema({
+  volumeInfo: {
+    title: String,
+    authors: [String],
+    publisher: String,
+    publishedDate: Date,
+    description: String,
+    pageCount: Number,
+    categories: [String],
+    maturityRating: String,
+    imageLinks: {
+      thumbnail: String,
+    },
+  },
+});
 
-// })
+const Books = mongoose.model("Books", booksSchema);
 
-// const Books = mongoose.model("Books" , booksSchema)
-
-// export default Books
+export default Books;

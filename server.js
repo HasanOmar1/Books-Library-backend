@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import { errorHandler } from "./middlewares/errorMiddleware.js";
 import usersRoute from "./routes/usersRoute.js";
+import booksRoute from "./routes/booksRoute.js";
 
 dotenv.config();
 
@@ -12,6 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/v1/users", usersRoute);
+app.use("/api/v1/books", booksRoute);
 
 app.use(errorHandler);
 
