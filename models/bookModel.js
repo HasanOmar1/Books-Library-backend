@@ -9,6 +9,7 @@ const booksSchema = new mongoose.Schema({
     description: String,
     pageCount: Number,
     categories: [String],
+    averageRating: Number,
     maturityRating: String,
     imageLinks: {
       thumbnail: String,
