@@ -54,7 +54,6 @@ export const addBookToLibrary = async (req, res, next) => {
       { new: true }
     ).populate("books");
 
-    console.log(req.user.books);
     if (!user) {
       res.status(STATUS_CODE.NOT_FOUND);
       throw new Error("User not found");
@@ -67,10 +66,28 @@ export const addBookToLibrary = async (req, res, next) => {
   }
 };
 
-// export const addBook = async (req,res,next) => {
-//     try {
+export const removeBookFromLibrary = async (req, res, next) => {
+  try {
+    const { bookId } = req.params;
+    const book = await Books.findById(bookId);
+    if (!book) {
+      res.status(STATUS_CODE.NOT_FOUND);
+      throw new Error("Book not found");
+    }
+    if (req.user.books.includes(bookId)) {
+      const user = await User.findByIdAndUpdate(
+        req.user._id,
+        {
+          $pull: { books: bookId },
+        },
+        { new: true }
+      ).populate("books");
+    } else {
+      throw new Error("User doesn't have this book in his library");
+    }
 
-//     } catch (error) {
-//         next(error)
-//     }
-// }
+    res.send(book);
+  } catch (error) {
+    next(error);
+  }
+};
