@@ -81,7 +81,7 @@ export const login = async (req, res, next) => {
 //  Public
 export const getUsers = async (req, res, next) => {
   try {
-    const users = await User.find({});
+    const users = await User.find({}).populate("books");
     res.send(users);
   } catch (error) {
     next(error);
@@ -100,24 +100,6 @@ export const deleteUser = async (req, res, next) => {
       throw new Error("User not found");
     }
     res.send(user);
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const getUserByToken = async (req, res, next) => {
-  try {
-    if (req.user === null) {
-      res.status(STATUS_CODE.NOT_FOUND);
-      throw new Error("User with this token is not found");
-    }
-    const { _id, name, email, books } = await User.findById(req.user._id);
-    res.status(200).send({
-      _id,
-      name,
-      email,
-      books,
-    });
   } catch (error) {
     next(error);
   }

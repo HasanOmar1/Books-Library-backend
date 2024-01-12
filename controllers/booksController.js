@@ -1,5 +1,6 @@
 import STATUS_CODE from "../constants/statusCode.js";
 import Books from "../models/bookModel.js";
+import User from "../models/usersModel.js";
 
 export const getBooks = async (req, res, next) => {
   try {
@@ -34,8 +35,33 @@ export const deleteBook = async (req, res, next) => {
 
 export const addBookToLibrary = async (req, res, next) => {
   try {
-    // console.log(req.user);
-    // res.send(req.user);
+    if (req.user === null) {
+      res.status(STATUS_CODE.FORBIDDEN);
+      throw new Error("User with this token is not found");
+    }
+
+    const { bookId } = req.params;
+
+    const book = await Books.findById(bookId);
+    if (!book) {
+      res.status(STATUS_CODE.NOT_FOUND);
+      throw new Error("Book not found");
+    }
+
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { $push: { books: [book] } },
+      { new: true }
+    ).populate("books");
+
+    console.log(req.user.books);
+    if (!user) {
+      res.status(STATUS_CODE.NOT_FOUND);
+      throw new Error("User not found");
+    }
+
+    await user.save();
+    res.send(user);
   } catch (error) {
     next(error);
   }
