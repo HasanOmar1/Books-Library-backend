@@ -64,6 +64,7 @@ export const login = async (req, res, next) => {
         _id: user.id,
         name: user.name,
         email: user.email,
+        books: user.books,
         token: generateToken(user._id),
       });
     } else {
@@ -99,6 +100,24 @@ export const deleteUser = async (req, res, next) => {
       throw new Error("User not found");
     }
     res.send(user);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getUserByToken = async (req, res, next) => {
+  try {
+    if (req.user === null) {
+      res.status(STATUS_CODE.NOT_FOUND);
+      throw new Error("User with this token is not found");
+    }
+    const { _id, name, email, books } = await User.findById(req.user._id);
+    res.status(200).send({
+      _id,
+      name,
+      email,
+      books,
+    });
   } catch (error) {
     next(error);
   }

@@ -32,13 +32,14 @@ export const deleteBook = async (req, res, next) => {
   }
 };
 
-// export const addBook = async (req,res,next) => {
-//     try {
-
-//     } catch (error) {
-//         next(error)
-//     }
-// }
+export const addBookToLibrary = async (req, res, next) => {
+  try {
+    // console.log(req.user);
+    // res.send(req.user);
+  } catch (error) {
+    next(error);
+  }
+};
 
 // export const addBook = async (req,res,next) => {
 //     try {

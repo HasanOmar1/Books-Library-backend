@@ -17,10 +17,12 @@ const usersSchema = new mongoose.Schema({
     required: [true, "Please provide a password"],
     minlength: [2, "Password length must be at least 2 characters long"],
   },
-  books: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Books",
-  },
+  books: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Books",
+    },
+  ],
 });
 
 const User = mongoose.model("Users", usersSchema);
