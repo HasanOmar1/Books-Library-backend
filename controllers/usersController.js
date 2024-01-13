@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 
 // generates token
 const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "30d" });
+  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "3d" });
 };
 
 //  Create new user
@@ -108,14 +108,13 @@ export const deleteUser = async (req, res, next) => {
 export const getUserByToken = async (req, res, next) => {
   try {
     // {_id , name , email , books}
-    console.log(req.user);
     const user = await User.findById(req.user.id);
     if (!user) {
       res.status(STATUS_CODE.NOT_FOUND);
       throw new Error("User not found");
     }
-    console.log(user);
     res.send({
+      _id: user._id,
       name: user.name,
       email: user.email,
       books: user.books,

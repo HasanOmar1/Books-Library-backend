@@ -48,6 +48,11 @@ export const addBookToLibrary = async (req, res, next) => {
       throw new Error("Book not found");
     }
 
+    if (req.user.books.includes(bookId)) {
+      res.status(STATUS_CODE.CONFLICT);
+      throw new Error("Book is already in your library");
+    }
+
     const user = await User.findByIdAndUpdate(
       req.user._id,
       { $push: { books: [book] } },
