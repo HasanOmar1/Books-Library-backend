@@ -4,8 +4,8 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 // generates token
-const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "3d" });
+const generateToken = (id, email) => {
+  return jwt.sign({ id, email }, process.env.JWT_SECRET, { expiresIn: "7d" });
 };
 
 //  Create new user
@@ -39,7 +39,7 @@ export const createUser = async (req, res, next) => {
         message: "User has been created",
         data: user,
         ok: true,
-        token: generateToken(user._id),
+        token: generateToken(user._id, user.email),
       });
     }
   } catch (error) {
@@ -65,7 +65,7 @@ export const login = async (req, res, next) => {
         name: user.name,
         email: user.email,
         books: user.books,
-        token: generateToken(user._id),
+        token: generateToken(user._id, user.email),
       });
     } else {
       res.status(STATUS_CODE.NOT_FOUND);

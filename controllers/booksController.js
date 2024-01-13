@@ -39,9 +39,8 @@ export const addBookToLibrary = async (req, res, next) => {
       res.status(STATUS_CODE.FORBIDDEN);
       throw new Error("User with this token is not found");
     }
-
+    console.log(req.user);
     const { bookId } = req.params;
-
     const book = await Books.findById(bookId);
     if (!book) {
       res.status(STATUS_CODE.NOT_FOUND);
