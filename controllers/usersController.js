@@ -58,7 +58,7 @@ export const login = async (req, res, next) => {
       throw new Error("Please provide your email and password");
     }
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).populate("books");
     if (user && (await bcrypt.compare(password, user.password))) {
       res.send({
         _id: user.id,
