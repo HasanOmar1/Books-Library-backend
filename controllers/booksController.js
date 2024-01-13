@@ -87,11 +87,12 @@ export const removeBookFromLibrary = async (req, res, next) => {
         },
         { new: true }
       ).populate("books");
+
+      await user.save();
+      res.send(user);
     } else {
       throw new Error("User doesn't have this book in his library");
     }
-
-    res.send(book);
   } catch (error) {
     next(error);
   }

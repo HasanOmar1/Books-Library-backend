@@ -105,7 +105,7 @@ export const deleteUser = async (req, res, next) => {
   }
 };
 
-export const getUserByToken = async (req, res, next) => {
+export const getLoggedUser = async (req, res, next) => {
   try {
     // {_id , name , email , books}
     const user = await User.findById(req.user.id);
