@@ -104,3 +104,23 @@ export const deleteUser = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getUserByToken = async (req, res, next) => {
+  try {
+    // {_id , name , email , books}
+    console.log(req.user);
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      res.status(STATUS_CODE.NOT_FOUND);
+      throw new Error("User not found");
+    }
+    console.log(user);
+    res.send({
+      name: user.name,
+      email: user.email,
+      books: user.books,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

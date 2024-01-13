@@ -4,6 +4,7 @@ import {
   deleteUser,
   getUsers,
   login,
+  getUserByToken,
 } from "../controllers/usersController.js";
 import { protect } from "../middlewares/authMiddleware.js";
 
@@ -12,6 +13,7 @@ const router = express.Router();
 // api/v1/users
 
 router.get("/", getUsers);
+router.get("/token", protect, getUserByToken);
 router.post("/create", createUser);
 router.post("/login", login);
 router.delete("/delete/:id", deleteUser);
