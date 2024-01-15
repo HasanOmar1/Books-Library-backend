@@ -13,7 +13,7 @@ const router = express.Router();
 // api/v1/users
 
 router.get("/", getUsers);
-router.get("/currentUser", protect, getLoggedUser);
+router.get("/currentUser", getLoggedUser); //protect
 router.post("/create", createUser);
 router.post("/login", login);
 router.delete("/delete/:id", deleteUser);
