@@ -54,7 +54,7 @@ export const addBookToLibrary = async (req, res, next) => {
 
     const user = await User.findByIdAndUpdate(
       req.user._id,
-      { $push: { books: [book] } },
+      { $push: { books: book } },
       { new: true }
     ).populate("books");
 
@@ -99,7 +99,7 @@ export const removeBookFromLibrary = async (req, res, next) => {
 
 export const findBookByName = async (req, res, next) => {
   try {
-    const regex = new RegExp(req.query.name, "i");
+    const regex = new RegExp(req.params.name, "i");
     const book = await Books.find({
       "volumeInfo.title": regex,
     });
@@ -113,14 +113,33 @@ export const findBookByName = async (req, res, next) => {
   }
 };
 
+// export const getBooksByCategory = async (req, res, next) => {
+//   try {
+//     const regex = new RegExp(req.query.category, "i");
+//     const books = await Books.find({ "volumeInfo.categories": regex });
+//     if (books.length === 0) {
+//       res.status(STATUS_CODE.NOT_FOUND);
+//       throw new Error("Book not found");
+//     }
+//     res.send(books);
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+
 export const getBooksByCategory = async (req, res, next) => {
   try {
-    const regex = new RegExp(req.query.category, "i");
-    const books = await Books.find({ "volumeInfo.categories": regex });
+    const categoryKeyword = new RegExp(req.params.category, "i");
+
+    const books = await Books.find({
+      "volumeInfo.categories": categoryKeyword,
+    });
+
     if (books.length === 0) {
       res.status(STATUS_CODE.NOT_FOUND);
       throw new Error("Book not found");
     }
+
     res.send(books);
   } catch (error) {
     next(error);
