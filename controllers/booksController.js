@@ -144,3 +144,19 @@ export const getBooksWithNoDescription = async (req, res, next) => {
     next(error);
   }
 };
+
+export const findBookByAuthor = async (req, res, next) => {
+  try {
+    const regex = new RegExp(req.params.author, "i");
+    const book = await Books.find({
+      "volumeInfo.authors": regex,
+    });
+    if (book.length === 0) {
+      res.status(STATUS_CODE.NOT_FOUND);
+      throw new Error("Book not found");
+    }
+    res.send(book);
+  } catch (error) {
+    next(error);
+  }
+};
