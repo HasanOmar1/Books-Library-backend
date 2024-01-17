@@ -5,6 +5,7 @@ import User from "../models/usersModel.js";
 export const getBooks = async (req, res, next) => {
   try {
     const books = await Books.find({});
+
     res.send(books);
   } catch (error) {
     next(error);
@@ -125,6 +126,18 @@ export const getBooksByCategory = async (req, res, next) => {
       res.status(STATUS_CODE.NOT_FOUND);
       throw new Error("Book not found");
     }
+
+    res.send(books);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getBooksWithNoDescription = async (req, res, next) => {
+  try {
+    const books = await Books.find({
+      "volumeInfo.description": { $exists: false },
+    });
 
     res.send(books);
   } catch (error) {

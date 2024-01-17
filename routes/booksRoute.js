@@ -7,6 +7,7 @@ import {
   deleteBook,
   findBookByName,
   getBooksByCategory,
+  getBooksWithNoDescription,
 } from "../controllers/booksController.js";
 import { protect } from "../middlewares/authMiddleware.js";
 
@@ -15,6 +16,7 @@ const router = express.Router();
 // /api/v1/books
 
 router.get("/", getBooks);
+router.get("/description/no", getBooksWithNoDescription);
 router.get("/search/:name", findBookByName); // gets books by name
 router.get("/category/:category", getBooksByCategory); // gets books by category
 
