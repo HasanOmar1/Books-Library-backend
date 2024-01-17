@@ -113,20 +113,6 @@ export const findBookByName = async (req, res, next) => {
   }
 };
 
-// export const getBooksByCategory = async (req, res, next) => {
-//   try {
-//     const regex = new RegExp(req.query.category, "i");
-//     const books = await Books.find({ "volumeInfo.categories": regex });
-//     if (books.length === 0) {
-//       res.status(STATUS_CODE.NOT_FOUND);
-//       throw new Error("Book not found");
-//     }
-//     res.send(books);
-//   } catch (error) {
-//     next(error);
-//   }
-// };
-
 export const getBooksByCategory = async (req, res, next) => {
   try {
     const categoryKeyword = new RegExp(req.params.category, "i");
