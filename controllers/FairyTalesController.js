@@ -55,3 +55,17 @@ export const updateFairyBook = async (req, res, next) => {
     next(error);
   }
 };
+
+//updates all books to have an author
+export const updateAllFairyBooks = async (req, res, next) => {
+  try {
+    const books = await FairyTale.updateMany(
+      {},
+      { $set: { author: "Edith Howes" } },
+      { multi: true }
+    );
+    res.send(books);
+  } catch (error) {
+    next(error);
+  }
+};
