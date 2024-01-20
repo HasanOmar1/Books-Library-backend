@@ -56,7 +56,9 @@ export const addBookToLibrary = async (req, res, next) => {
       req.user._id,
       { $push: { books: book } },
       { new: true }
-    ).populate("books");
+    )
+      .populate("books")
+      .populate("fairyBooks");
 
     if (!user) {
       res.status(STATUS_CODE.NOT_FOUND);
@@ -85,7 +87,9 @@ export const removeBookFromLibrary = async (req, res, next) => {
           $pull: { books: bookId },
         },
         { new: true }
-      ).populate("books");
+      )
+        .populate("books")
+        .populate("fairyBooks");
 
       await user.save();
       res.send(user);
