@@ -23,6 +23,12 @@ const usersSchema = new mongoose.Schema({
       ref: "Books",
     },
   ],
+  fairyBooks: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "FairyBooks",
+    },
+  ],
 });
 
 const User = mongoose.model("Users", usersSchema);

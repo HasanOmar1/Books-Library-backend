@@ -10,9 +10,7 @@ export const protect = asyncHandler(async (req, res, next) => {
   if (authHeader && authHeader.startsWith("Bearer")) {
     try {
       token = authHeader.split(" ")[1];
-      console.log(token);
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      console.log("Decoded Token:", decoded);
       req.user = await User.findById(decoded.id).select("-password");
 
       next();

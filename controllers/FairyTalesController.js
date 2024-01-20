@@ -1,5 +1,6 @@
 import STATUS_CODE from "../constants/statusCode.js";
 import FairyTale from "../models/FairyTalesModel.js";
+import User from "../models/usersModel.js";
 
 export const getFairyBooks = async (req, res, next) => {
   try {
@@ -69,3 +70,66 @@ export const updateFairyBook = async (req, res, next) => {
 //     next(error);
 //   }
 // };
+
+export const addBookToLibrary = async (req, res, next) => {
+  try {
+    if (req.user === null) {
+      res.status(STATUS_CODE.FORBIDDEN);
+      throw new Error("User with this token is not found");
+    }
+    const { bookId } = req.params;
+    const book = await FairyTale.findById(bookId);
+    if (!book) {
+      res.status(STATUS_CODE.NOT_FOUND);
+      throw new Error("Book not found");
+    }
+
+    if (req.user.fairyBooks.includes(bookId)) {
+      res.status(STATUS_CODE.CONFLICT);
+      throw new Error("Book is already in your library");
+    }
+
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { $push: { fairyBooks: book } },
+      { new: true }
+    ).populate("fairyBooks");
+
+    if (!user) {
+      res.status(STATUS_CODE.NOT_FOUND);
+      throw new Error("User not found");
+    }
+
+    await user.save();
+    res.send(user);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const removeBookFromLibrary = async (req, res, next) => {
+  try {
+    const { bookId } = req.params;
+    const book = await FairyTale.findById(bookId);
+    if (!book) {
+      res.status(STATUS_CODE.NOT_FOUND);
+      throw new Error("Book not found");
+    }
+    if (req.user.fairyBooks.includes(bookId)) {
+      const user = await User.findByIdAndUpdate(
+        req.user._id,
+        {
+          $pull: { fairyBooks: bookId },
+        },
+        { new: true }
+      ).populate("fairyBooks");
+
+      await user.save();
+      res.send(user);
+    } else {
+      throw new Error("User doesn't have this book in his library");
+    }
+  } catch (error) {
+    next(error);
+  }
+};

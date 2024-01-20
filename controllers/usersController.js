@@ -81,7 +81,7 @@ export const login = async (req, res, next) => {
 //  Public
 export const getUsers = async (req, res, next) => {
   try {
-    const users = await User.find({}).populate("books");
+    const users = await User.find({}).populate("books").populate("fairyBooks");
     res.send(users);
   } catch (error) {
     next(error);
