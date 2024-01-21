@@ -4,7 +4,10 @@ import User from "../models/usersModel.js";
 
 export const getBooks = async (req, res, next) => {
   try {
-    const books = await Books.find({}).populate("comments");
+    const books = await Books.find({}).populate({
+      path: "comments",
+      populate: { path: "user" },
+    });
 
     res.send(books);
   } catch (error) {
