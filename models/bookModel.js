@@ -15,6 +15,12 @@ const booksSchema = new mongoose.Schema({
       thumbnail: String,
     },
   },
+  comments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Comments",
+    },
+  ],
 });
 
 const Books = mongoose.model("Books", booksSchema);

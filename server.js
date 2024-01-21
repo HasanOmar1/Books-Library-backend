@@ -6,6 +6,7 @@ import { errorHandler } from "./middlewares/errorMiddleware.js";
 import usersRoute from "./routes/usersRoute.js";
 import booksRoute from "./routes/booksRoute.js";
 import fairyRoute from "./routes/fairyRoute.js";
+import commentsRouter from "./routes/commentsRoute.js";
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use("/api/v1/users", usersRoute);
 app.use("/api/v1/books", booksRoute);
 app.use("/api/v1/fairy", fairyRoute);
+app.use("/api/v1/comments", commentsRouter);
 
 app.use(errorHandler);
 

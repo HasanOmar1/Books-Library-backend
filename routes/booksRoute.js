@@ -9,6 +9,7 @@ import {
   getBooksByCategory,
   getBooksWithNoDescription,
   findBookByAuthor,
+  // addComment,
 } from "../controllers/booksController.js";
 import { protect } from "../middlewares/authMiddleware.js";
 
@@ -25,6 +26,7 @@ router.get("/author/:author", findBookByAuthor); // gets books by author
 router.post("/", addBook);
 router.put("/addBook/:bookId", protect, addBookToLibrary); // protect
 router.put("/removeBook/:bookId", protect, removeBookFromLibrary); //protect
+// router.put("/comment/:bookId", protect, addComment); //protect
 router.delete("/:id", deleteBook);
 
 export default router;

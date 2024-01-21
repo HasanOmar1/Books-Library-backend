@@ -4,7 +4,7 @@ import User from "../models/usersModel.js";
 
 export const getBooks = async (req, res, next) => {
   try {
-    const books = await Books.find({});
+    const books = await Books.find({}).populate("comments");
 
     res.send(books);
   } catch (error) {
@@ -106,7 +106,11 @@ export const findBookByName = async (req, res, next) => {
     const regex = new RegExp(req.params.name, "i");
     const book = await Books.find({
       "volumeInfo.title": regex,
+    }).populate({
+      path: "comments",
+      populate: { path: "user" },
     });
+
     if (book.length === 0) {
       res.status(STATUS_CODE.NOT_FOUND);
       throw new Error("Book not found");
