@@ -1,13 +1,14 @@
 import STATUS_CODE from "../constants/statusCode.js";
+import FairyTale from "../models/FairyTalesModel.js";
 import Books from "../models/bookModel.js";
 import Comments from "../models/commentsModel.js";
-import User from "../models/usersModel.js";
 
 export const getComments = async (req, res, next) => {
   try {
     const comments = await Comments.find({})
       .populate("bookName")
-      .populate("user");
+      .populate("user")
+      .populate("fairyBookName");
     res.send(comments);
   } catch (error) {
     next(error);
@@ -18,31 +19,14 @@ export const getCommentsByBook = async (req, res, next) => {
   try {
     const comments = await Comments.find({ _id: req.params.id })
       .populate("bookName")
-      .populate("user");
+      .populate("user")
+      .populate("fairyBookName");
+
     res.send(comments);
   } catch (error) {
     next(error);
   }
 };
-
-// export const createComment = async (req, res, next) => {
-//   try {
-//     if (!req.user) {
-//       res.status(STATUS_CODE.FORBIDDEN);
-//       throw new Error("User is not authorized");
-//     }
-
-//     const { comment } = req.body;
-//     const createComment = await Comments.create({
-//       //   by: req.user._id,
-//       comment: comment,
-//     });
-
-//     res.send(createComment);
-//   } catch (error) {
-//     next(error);
-//   }
-// };
 
 export const createComment = async (req, res, next) => {
   try {
@@ -51,22 +35,42 @@ export const createComment = async (req, res, next) => {
       throw new Error("User is not authorized");
     }
 
-    const { comment, bookName } = req.body;
+    const { comment, bookName, fairyBookName } = req.body;
     const createComment = await Comments.create({
       comment,
       bookName,
+      fairyBookName,
       user: req.user._id,
     });
 
-    const book = await Books.findByIdAndUpdate(
-      bookName,
-      { $push: { comments: createComment._id } },
-      { new: true }
-    ).populate({
-      path: "comments",
-      populate: { path: "user" },
-    });
-    res.send(book);
+    const findBook = await Books.findById(bookName);
+    if (findBook) {
+      const book = await Books.findByIdAndUpdate(
+        bookName,
+        { $push: { comments: createComment._id } },
+        { new: true }
+      ).populate({
+        path: "comments",
+        populate: { path: "user" },
+      });
+      res.send(book);
+    }
+
+    const findFairyBook = await FairyTale.findById(bookName);
+
+    if (findFairyBook) {
+      const fairyBook = await FairyTale.findByIdAndUpdate(
+        bookName,
+        { $push: { comments: createComment._id } },
+        { new: true }
+      ).populate({
+        path: "comments",
+        populate: { path: "user" },
+      });
+      res.send(fairyBook);
+    }
+
+    res.send("No book found");
   } catch (error) {
     next(error);
   }
@@ -86,50 +90,16 @@ export const removeComment = async (req, res, next) => {
       throw new Error("This Book doesn't have this comment");
     }
 
-    if (book.comments) {
+    if (book.comments && book.comments.length > 0) {
       await Books.findByIdAndUpdate(comment.bookName, {
         $pull: { comments: comment._id },
       });
     }
 
     await comment.deleteOne({ _id: comment._id });
-    res.send(`Comment with the id of ${comment._id} has been deleted`);
+
+    res.send(book);
   } catch (error) {
     next(error);
   }
 };
-
-// export const getComments = async (req,res,next) => {
-//     try {
-
-//     } catch (error) {
-//         next(error)
-//     }
-// }
-
-// export const addComment = async (req, res, next) => {
-//   try {
-//     if (!req.user) {
-//       res.status(STATUS_CODE.FORBIDDEN);
-//       throw new Error("User is not authorized");
-//     }
-
-//     const { comment } = req.body;
-//     const book = await Books.findByIdAndUpdate(
-//       req.params.bookId,
-//       {
-//         $push: {
-//           comments: comment,
-//         },
-//       },
-//       { new: true }
-//     ).populate("comments");
-//     if (!book) {
-//       res.status(STATUS_CODE.NOT_FOUND);
-//       throw new Error("Book not found");
-//     }
-//     res.send(book);
-//   } catch (error) {
-//     next(error);
-//   }
-// };

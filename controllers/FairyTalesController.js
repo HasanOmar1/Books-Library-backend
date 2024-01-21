@@ -4,7 +4,10 @@ import User from "../models/usersModel.js";
 
 export const getFairyBooks = async (req, res, next) => {
   try {
-    const book = await FairyTale.find({});
+    const book = await FairyTale.find({}).populate({
+      path: "comments",
+      populate: { path: "user" },
+    });
     res.send(book);
   } catch (error) {
     next(error);

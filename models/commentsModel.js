@@ -9,6 +9,10 @@ const commentSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Books",
   },
+  fairyBookName: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "FairyBooks",
+  },
   comment: {
     type: {},
     required: true,
