@@ -2,6 +2,7 @@ import express from "express";
 import {
   addBookToLibrary,
   addFairyBooks,
+  getFairyBookByName,
   getFairyBooks,
   removeBookFromLibrary,
   removeFairyBook,
@@ -13,6 +14,7 @@ import { protect } from "../middlewares/authMiddleware.js";
 const router = express();
 
 router.get("/", getFairyBooks);
+router.get("/title/:name", getFairyBookByName);
 router.post("/", addFairyBooks);
 router.put("/:id", updateFairyBook);
 router.put("/addBook/:bookId", protect, addBookToLibrary); // protect

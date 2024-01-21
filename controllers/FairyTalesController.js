@@ -11,6 +11,20 @@ export const getFairyBooks = async (req, res, next) => {
   }
 };
 
+export const getFairyBookByName = async (req, res, next) => {
+  try {
+    const regex = new RegExp(req.params.name, "i");
+    const book = await FairyTale.find({ title: regex });
+    if (!book) {
+      res.status(STATUS_CODE.NOT_FOUND);
+      throw new Error("Book not found");
+    }
+    res.send(book);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const addFairyBooks = async (req, res, next) => {
   try {
     const { title, content, img } = req.body;
