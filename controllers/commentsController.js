@@ -14,6 +14,17 @@ export const getComments = async (req, res, next) => {
   }
 };
 
+export const getCommentsByBook = async (req, res, next) => {
+  try {
+    const comments = await Comments.find({ _id: req.params.id })
+      .populate("bookName")
+      .populate("user");
+    res.send(comments);
+  } catch (error) {
+    next(error);
+  }
+};
+
 // export const createComment = async (req, res, next) => {
 //   try {
 //     if (!req.user) {
@@ -35,10 +46,10 @@ export const getComments = async (req, res, next) => {
 
 export const createComment = async (req, res, next) => {
   try {
-    // if (!req.user) {
-    //   res.status(STATUS_CODE.FORBIDDEN);
-    //   throw new Error("User is not authorized");
-    // }
+    if (!req.user) {
+      res.status(STATUS_CODE.FORBIDDEN);
+      throw new Error("User is not authorized");
+    }
 
     const { comment, bookName } = req.body;
     const createComment = await Comments.create({
@@ -51,7 +62,10 @@ export const createComment = async (req, res, next) => {
       bookName,
       { $push: { comments: createComment._id } },
       { new: true }
-    ).populate("comments");
+    ).populate({
+      path: "comments",
+      populate: { path: "user" },
+    });
     res.send(book);
   } catch (error) {
     next(error);

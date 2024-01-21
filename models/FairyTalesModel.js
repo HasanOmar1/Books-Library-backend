@@ -17,6 +17,12 @@ const FairyTaleSchema = new mongoose.Schema({
     type: {},
     required: [true, "Please add an img"],
   },
+  comments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Comments",
+    },
+  ],
 });
 
 const FairyTale = mongoose.model("FairyBooks", FairyTaleSchema);
