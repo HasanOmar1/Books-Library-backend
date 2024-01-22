@@ -34,7 +34,7 @@ export const getFairyBookByName = async (req, res, next) => {
 
 export const addFairyBooks = async (req, res, next) => {
   try {
-    const { title, author, description, content, img, comments } = req.body;
+    const { title, author, description, content, img, categories } = req.body;
 
     const splitString = (str, chunkSize) => {
       const regex = new RegExp(`.{1,${chunkSize}}`, "g");
@@ -60,7 +60,7 @@ export const addFairyBooks = async (req, res, next) => {
       description,
       content: newContentArray,
       img,
-      comments,
+      categories,
     });
 
     res.send(book);
@@ -102,7 +102,7 @@ export const updateFairyBook = async (req, res, next) => {
 //   try {
 //     const books = await FairyTale.updateMany(
 //       {},
-//       { $set: { description: "A short fairy tale" } },
+//       { $set: { categories: "Fairy Tale" } },
 //       { multi: true }
 //     );
 //     res.send(books);
