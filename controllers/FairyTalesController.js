@@ -34,7 +34,35 @@ export const getFairyBookByName = async (req, res, next) => {
 
 export const addFairyBooks = async (req, res, next) => {
   try {
-    const book = await FairyTale.create(req.body);
+    const { title, author, description, content, img, comments } = req.body;
+
+    const splitString = (str, chunkSize) => {
+      const regex = new RegExp(`.{1,${chunkSize}}`, "g");
+      const matchedSubstrings = str.match(regex) || [];
+
+      // Add a space at the end of each substring
+      const substringsWithSpace = matchedSubstrings.map(
+        (substring) => substring + " "
+      );
+
+      return substringsWithSpace;
+    };
+
+    // Split each string in the content array into new strings with a maximum length of 100 characters
+    const newContentArray = content.reduce((acc, str) => {
+      const stringsArray = splitString(str, 100);
+      return acc.concat(stringsArray);
+    }, []);
+
+    const book = await FairyTale.create({
+      title,
+      author,
+      description,
+      content: newContentArray,
+      img,
+      comments,
+    });
+
     res.send(book);
   } catch (error) {
     next(error);
