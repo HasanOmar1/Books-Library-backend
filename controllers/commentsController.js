@@ -56,11 +56,11 @@ export const createComment = async (req, res, next) => {
       res.send(book);
     }
 
-    const findFairyBook = await FairyTale.findById(bookName);
+    const findFairyBook = await FairyTale.findById(fairyBookName);
 
     if (findFairyBook) {
       const fairyBook = await FairyTale.findByIdAndUpdate(
-        bookName,
+        fairyBookName,
         { $push: { comments: createComment._id } },
         { new: true }
       ).populate({
@@ -70,7 +70,10 @@ export const createComment = async (req, res, next) => {
       res.send(fairyBook);
     }
 
-    res.send("No book found");
+    if (!findFairyBook && !findBook) {
+      res.status(STATUS_CODE.NOT_FOUND);
+      throw new Error("This Book doesn't exist");
+    }
   } catch (error) {
     next(error);
   }
@@ -85,20 +88,38 @@ export const removeComment = async (req, res, next) => {
     }
 
     const book = await Books.findById(comment.bookName);
-    if (!book) {
+    // if (!book) {
+    //   res.status(STATUS_CODE.NOT_FOUND);
+    //   throw new Error("This Book doesn't have this comment");
+    // }
+
+    if (book) {
+      if (book.comments && book.comments.length > 0) {
+        await Books.findByIdAndUpdate(comment.bookName, {
+          $pull: { comments: comment._id },
+        });
+      }
+      await comment.deleteOne({ _id: comment._id });
+      res.send(book);
+    }
+
+    const fairyBook = await FairyTale.findById(comment.fairyBookName);
+
+    if (fairyBook) {
+      if (fairyBook.comments && fairyBook.comments.length > 0) {
+        await Books.findByIdAndUpdate(comment.fairyBookName, {
+          $pull: { comments: comment._id },
+        });
+      }
+
+      await comment.deleteOne({ _id: comment._id });
+      res.send(fairyBook);
+    }
+
+    if (!fairyBook && !book) {
       res.status(STATUS_CODE.NOT_FOUND);
       throw new Error("This Book doesn't have this comment");
     }
-
-    if (book.comments && book.comments.length > 0) {
-      await Books.findByIdAndUpdate(comment.bookName, {
-        $pull: { comments: comment._id },
-      });
-    }
-
-    await comment.deleteOne({ _id: comment._id });
-
-    res.send(book);
   } catch (error) {
     next(error);
   }
