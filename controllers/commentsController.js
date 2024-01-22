@@ -88,11 +88,6 @@ export const removeComment = async (req, res, next) => {
     }
 
     const book = await Books.findById(comment.bookName);
-    // if (!book) {
-    //   res.status(STATUS_CODE.NOT_FOUND);
-    //   throw new Error("This Book doesn't have this comment");
-    // }
-
     if (book) {
       if (book.comments && book.comments.length > 0) {
         await Books.findByIdAndUpdate(comment.bookName, {
@@ -104,10 +99,9 @@ export const removeComment = async (req, res, next) => {
     }
 
     const fairyBook = await FairyTale.findById(comment.fairyBookName);
-
     if (fairyBook) {
       if (fairyBook.comments && fairyBook.comments.length > 0) {
-        await Books.findByIdAndUpdate(comment.fairyBookName, {
+        await FairyTale.findByIdAndUpdate(comment.fairyBookName, {
           $pull: { comments: comment._id },
         });
       }
