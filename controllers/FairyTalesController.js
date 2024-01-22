@@ -34,16 +34,7 @@ export const getFairyBookByName = async (req, res, next) => {
 
 export const addFairyBooks = async (req, res, next) => {
   try {
-    const { title, content, img } = req.body;
-    if (!title || !content || !img) {
-      res.status(STATUS_CODE.NOT_FOUND);
-      throw new Error("Please fill all fields");
-    }
-    const book = await FairyTale.create({
-      title,
-      content,
-      img,
-    });
+    const book = await FairyTale.create(req.body);
     res.send(book);
   } catch (error) {
     next(error);
@@ -78,12 +69,12 @@ export const updateFairyBook = async (req, res, next) => {
   }
 };
 
-//updates all books to have an author - one time use
+//updates all books to have new field
 // export const updateAllFairyBooks = async (req, res, next) => {
 //   try {
 //     const books = await FairyTale.updateMany(
 //       {},
-//       { $set: { author: "Edith Howes" } },
+//       { $set: { description: "A short fairy tale" } },
 //       { multi: true }
 //     );
 //     res.send(books);

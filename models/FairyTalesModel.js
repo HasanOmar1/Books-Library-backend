@@ -9,12 +9,16 @@ const FairyTaleSchema = new mongoose.Schema({
     type: String,
     required: [true, "please add an author"],
   },
+  description: {
+    type: String,
+    required: [true, "Please add a description"],
+  },
   content: {
     type: [String],
     required: [true, "Please add content"],
   },
   img: {
-    type: {},
+    type: String,
     required: [true, "Please add an img"],
   },
   comments: [
