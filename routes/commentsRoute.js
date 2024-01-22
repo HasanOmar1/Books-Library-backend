@@ -12,6 +12,6 @@ const router = express.Router();
 router.get("/", getComments);
 router.get("/:id", getCommentsByBook);
 router.post("/create", protect, createComment);
-router.delete("/remove/:id", removeComment);
+router.delete("/remove/:id", protect, removeComment);
 
 export default router;

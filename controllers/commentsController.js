@@ -9,6 +9,7 @@ export const getComments = async (req, res, next) => {
       .populate("bookName")
       .populate("user")
       .populate("fairyBookName");
+
     res.send(comments);
   } catch (error) {
     next(error);
@@ -82,28 +83,60 @@ export const createComment = async (req, res, next) => {
 export const removeComment = async (req, res, next) => {
   try {
     const comment = await Comments.findById(req.params.id);
+    if (JSON.stringify(req.user._id) !== JSON.stringify(comment.user)) {
+      res.status(STATUS_CODE.UNAUTHORIZED);
+      throw new Error("User is not authorized");
+    }
     if (!comment) {
       res.status(STATUS_CODE.NOT_FOUND);
       throw new Error("Comment not found");
     }
 
-    const book = await Books.findById(comment.bookName);
+    let book = await Books.findById(comment.bookName)
+      .populate("comments")
+      .populate({
+        path: "comments",
+        populate: { path: "user" },
+      });
     if (book) {
       if (book.comments && book.comments.length > 0) {
-        await Books.findByIdAndUpdate(comment.bookName, {
-          $pull: { comments: comment._id },
-        });
+        book = await Books.findByIdAndUpdate(
+          comment.bookName,
+          {
+            $pull: { comments: comment._id },
+          },
+          { new: true }
+        )
+          .populate("comments")
+          .populate({
+            path: "comments",
+            populate: { path: "user" },
+          });
       }
       await comment.deleteOne({ _id: comment._id });
       res.send(book);
     }
 
-    const fairyBook = await FairyTale.findById(comment.fairyBookName);
+    let fairyBook = await FairyTale.findById(comment.fairyBookName)
+      .populate("comments")
+      .populate({
+        path: "comments",
+        populate: { path: "user" },
+      });
     if (fairyBook) {
       if (fairyBook.comments && fairyBook.comments.length > 0) {
-        await FairyTale.findByIdAndUpdate(comment.fairyBookName, {
-          $pull: { comments: comment._id },
-        });
+        fairyBook = await FairyTale.findByIdAndUpdate(
+          comment.fairyBookName,
+          {
+            $pull: { comments: comment._id },
+          },
+          { new: true }
+        )
+          .populate("comments")
+          .populate({
+            path: "comments",
+            populate: { path: "user" },
+          });
       }
 
       await comment.deleteOne({ _id: comment._id });
