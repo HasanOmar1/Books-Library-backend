@@ -71,16 +71,50 @@ export const addFairyBooks = async (req, res, next) => {
 
 export const removeFairyBook = async (req, res, next) => {
   try {
-    const book = await FairyTale.findByIdAndDelete(req.params.id);
+    const book = await FairyTale.findById(req.params.id);
     if (!book) {
       res.status(STATUS_CODE.NOT_FOUND);
       throw new Error("Book not found");
     }
-    res.send(book);
+
+    let user = await User.findById(req.user._id);
+
+    if (user.fairyBooks.includes(book._id)) {
+      user = await User.findByIdAndUpdate(
+        req.user._id,
+        { $pull: { fairyBooks: book._id } },
+        { new: true }
+      )
+        .populate("books")
+        .populate("fairyBooks");
+      await book.deleteOne({ _id: book._id });
+      res.send(user);
+    } else {
+      const deletedBook = await FairyTale.findByIdAndDelete(req.params.id);
+      if (!deletedBook) {
+        res.status(STATUS_CODE.NOT_FOUND);
+        throw new Error("Book not found");
+      }
+      res.send(deletedBook);
+    }
   } catch (error) {
     next(error);
   }
 };
+
+// export const removeFairyBookFromEverywhere = async (req, res, next) => {
+//   try {
+//     const book = await FairyTale.findByIdAndDelete(req.params.id);
+//     if (!book) {
+//       res.status(STATUS_CODE.NOT_FOUND);
+//       throw new Error("Book not found");
+//     }
+
+//     res.send(book);
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 
 export const updateFairyBook = async (req, res, next) => {
   try {

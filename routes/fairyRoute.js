@@ -21,6 +21,6 @@ router.put("/addBook/:bookId", protect, addBookToLibrary); // protect
 router.put("/removeBook/:bookId", protect, removeBookFromLibrary); //protect
 // router.put("/update/book", updateAllFairyBooks); // //updates all books [ to add a new field]
 
-router.delete("/:id", removeFairyBook);
+router.delete("/:id", protect, removeFairyBook);
 
 export default router;
