@@ -23,7 +23,6 @@ const FairyTaleSchema = new mongoose.Schema({
   },
   img: {
     type: String,
-    required: [true, "Please add an img"],
   },
   comments: [
     {

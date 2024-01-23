@@ -27,8 +27,15 @@ export const createUser = async (req, res, next) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    const capName = name.charAt(0).toUpperCase() + name.slice(1);
+    const nameExist = await User.findOne({ name: capName });
+    if (nameExist) {
+      res.status(STATUS_CODE.CONFLICT);
+      throw new Error("Name already taken");
+    }
+
     const user = await User.create({
-      name,
+      name: capName,
       email,
       password: hashedPassword,
     });
