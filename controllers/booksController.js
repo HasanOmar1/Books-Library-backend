@@ -106,6 +106,10 @@ export const removeBookFromLibrary = async (req, res, next) => {
 
 export const findBookByName = async (req, res, next) => {
   try {
+    if (!req.params.name) {
+      res.status(STATUS_CODE.NOT_FOUND);
+      throw new Error("Book not found");
+    }
     const regex = new RegExp(req.params.name, "i");
     const book = await Books.find({
       "volumeInfo.title": regex,

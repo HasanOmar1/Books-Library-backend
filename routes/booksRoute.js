@@ -20,6 +20,7 @@ const router = express.Router();
 router.get("/", getBooks);
 router.get("/description/no", getBooksWithNoDescription);
 router.get("/search/:name", findBookByName); // gets books by name
+router.get("/search", findBookByName); // gets books by name
 router.get("/category/:category", getBooksByCategory); // gets books by category
 router.get("/author/:author", findBookByAuthor); // gets books by author
 

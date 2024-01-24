@@ -16,13 +16,16 @@ export const getFairyBooks = async (req, res, next) => {
 
 export const getFairyBookByName = async (req, res, next) => {
   try {
+    if (!req.params.name) {
+      res.status(STATUS_CODE.NOT_FOUND);
+      throw new Error("Book not found");
+    }
     const regex = new RegExp(req.params.name, "i");
     const book = await FairyTale.find({ title: regex }).populate({
       path: "comments",
       populate: { path: "user" },
     });
-
-    if (!book) {
+    if (book.length === 0) {
       res.status(STATUS_CODE.NOT_FOUND);
       throw new Error("Book not found");
     }
