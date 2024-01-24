@@ -24,7 +24,6 @@ router.post("/", addFairyBooks); // creates a book [for the user to add a book t
 router.put("/:id", updateFairyBook); // updates a book
 router.put("/addBook/:bookId", protect, addBookToLibrary); // adds book to user library
 router.put("/removeBook/:bookId", protect, removeBookFromLibrary); // removes book from user library
-
 // router.put("/update/book", updateAllFairyBooks); // updates all books [ to add a new field]
 
 router.delete("/:id", protect, removeFairyBook); // deletes a book
