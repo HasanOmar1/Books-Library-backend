@@ -16,7 +16,7 @@ export const getComments = async (req, res, next) => {
   }
 };
 
-export const getCommentsByBook = async (req, res, next) => {
+export const getCommentById = async (req, res, next) => {
   try {
     const comments = await Comments.find({ _id: req.params.id })
       .populate("bookName")

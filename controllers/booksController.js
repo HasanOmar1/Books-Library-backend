@@ -147,18 +147,6 @@ export const getBooksByCategory = async (req, res, next) => {
   }
 };
 
-export const getBooksWithNoDescription = async (req, res, next) => {
-  try {
-    const books = await Books.find({
-      "volumeInfo.description": { $exists: false },
-    });
-
-    res.send(books);
-  } catch (error) {
-    next(error);
-  }
-};
-
 export const findBookByAuthor = async (req, res, next) => {
   try {
     const regex = new RegExp(req.params.author, "i");

@@ -6,16 +6,15 @@ import {
   login,
   getLoggedUser,
 } from "../controllers/usersController.js";
-import { protect } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
 // api/v1/users
 
-router.get("/", getUsers);
-router.get("/currentUser", getLoggedUser); //protect
-router.post("/create", createUser);
-router.post("/login", login);
-router.delete("/delete/:id", deleteUser);
+router.get("/", getUsers); // gets all users
+router.get("/currentUser", getLoggedUser); // gets logged on user [ not using it ]
+router.post("/create", createUser); // creates an account
+router.post("/login", login); // login to your account
+router.delete("/delete/:id", deleteUser); // deletes user from the database
 
 export default router;

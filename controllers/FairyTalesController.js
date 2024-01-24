@@ -105,20 +105,6 @@ export const removeFairyBook = async (req, res, next) => {
   }
 };
 
-// export const removeFairyBookFromEverywhere = async (req, res, next) => {
-//   try {
-//     const book = await FairyTale.findByIdAndDelete(req.params.id);
-//     if (!book) {
-//       res.status(STATUS_CODE.NOT_FOUND);
-//       throw new Error("Book not found");
-//     }
-
-//     res.send(book);
-//   } catch (error) {
-//     next(error);
-//   }
-// };
-
 export const updateFairyBook = async (req, res, next) => {
   try {
     const book = await FairyTale.findByIdAndUpdate(req.params.id, req.body, {

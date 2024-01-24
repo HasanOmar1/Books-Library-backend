@@ -13,15 +13,20 @@ import { protect } from "../middlewares/authMiddleware.js";
 
 const router = express();
 
-router.get("/", getFairyBooks);
-router.get("/title/:name", getFairyBookByName);
-router.get("/title", getFairyBookByName);
-router.post("/", addFairyBooks);
-router.put("/:id", updateFairyBook);
-router.put("/addBook/:bookId", protect, addBookToLibrary); // protect
-router.put("/removeBook/:bookId", protect, removeBookFromLibrary); //protect
-// router.put("/update/book", updateAllFairyBooks); // //updates all books [ to add a new field]
+// api/v1/fairy
 
-router.delete("/:id", protect, removeFairyBook);
+router.get("/", getFairyBooks); // gets all fairytales and books added by users
+router.get("/title/:name", getFairyBookByName); // gets book by name
+router.get("/title", getFairyBookByName); // check if search length === 0
+
+router.post("/", addFairyBooks); // creates a book [for the user to add a book to the site]
+
+router.put("/:id", updateFairyBook); // updates a book
+router.put("/addBook/:bookId", protect, addBookToLibrary); // adds book to user library
+router.put("/removeBook/:bookId", protect, removeBookFromLibrary); // removes book from user library
+
+// router.put("/update/book", updateAllFairyBooks); // updates all books [ to add a new field]
+
+router.delete("/:id", protect, removeFairyBook); // deletes a book
 
 export default router;
