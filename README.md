@@ -36,7 +36,7 @@ I have created a responsive book library using React for the frontend and MongoD
 - https://books-library-backend.cyclic.app
 
 - Routes
-  ![routes](./assets/routes.png)
+  ![routes](./assets/routess.png)
 
 - Users
   ![user](./assets//user.png)
